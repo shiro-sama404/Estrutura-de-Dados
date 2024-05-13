@@ -25,7 +25,7 @@ typedef struct{
 
 // Função hash
 uint16_t NameHashFunction( const char * key, uint8_t attempt) {
-   return (uint16_t)(key + attempt * 61 - ((int)key % 37));
+   return (uint16_t)(*key + attempt * 61 - (*key % 37));
 }
 
 // Insere uma cidade na tabela hash
@@ -55,7 +55,7 @@ bool InitializeNameHash( tname_hash * name_hash, thash * hash ){
     //  Inicialização padrão da hash
     printf("\nInicializando a name hash..\n");
 
-    name_hash->table = (char **) calloc(11131, sizeof(char *));
+    name_hash->table = (tcity **) calloc(11131, sizeof(tcity *));
 
     if (name_hash->table == NULL)
         return false;

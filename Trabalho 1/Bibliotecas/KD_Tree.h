@@ -202,15 +202,10 @@ void swapNear( tnear * a, tnear * b ){
     b = temp;
 }
 
-void addNear( tnear * nearest, kd_node * node, tcity * target, short * size, short max ){
+void addNear( tnear * nearest, kd_node * node, tcity * target, short * size ){
     
-    printf("\ncod: %d", node->city->ibge_code);
-    //printf("\n\nEntrou addNear\n\n");
     nearest[*size].city = node->city;
     nearest[*size].distance = getCityDistance(node->city, target);
-
-    //printf("\ncod: %d", (nearest[*size].city)->ibge_code);
-    //printf("\ndist: %f\n", nearest[*size].distance);
 
     for(short i = 0; i < (*size)-1; i++){
         for(short j = 1; j < (*size); j++){
@@ -220,8 +215,6 @@ void addNear( tnear * nearest, kd_node * node, tcity * target, short * size, sho
     }
 
     (*size)++;
-
-   //printf("\n\nPassou addNear\n\n");
 }
 
 // Verifica se em algum eixo a cidade a é mais próxima da cidade target do que a cidade b
@@ -310,7 +303,7 @@ tnear * getNearestCities( kd_tree * tree, thash * hash, uint32_t ibge_code, shor
     printf("\nProcurando as %hu cidades mais próximas\n", n_nearest_cities);
 
     for(int i = 0; i < n_nearest_cities; i++)
-        addNear(nearest, getNearestCity(tree->root, target_city, nearest, 0, size, n_nearest_cities), target_city, size, n_nearest_cities);
+        addNear(nearest, getNearestCity(tree->root, target_city, nearest, 0, size, n_nearest_cities), target_city, size);
 
     printf("\nCidades encontradas.\n");
 
