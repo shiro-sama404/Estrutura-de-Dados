@@ -1,5 +1,5 @@
 //#include "..\\Bibliotecas\Trabalho.h"
-#include "..\Bibliotecas\Trabalho.h"
+#include "..\Bibliotecas\Hash.h"
 
 #include <stdlib.h>
 #include <stdio.h>

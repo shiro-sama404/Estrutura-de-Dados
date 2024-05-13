@@ -53,7 +53,7 @@ void InsertInNameHash( tname_hash * name_hash, tcity * city ){
 bool InitializeNameHash( tname_hash * name_hash, thash * hash ){
 
     //  Inicialização padrão da hash
-    printf("\nInicializando a hash..\n");
+    printf("\nInicializando a name hash..\n");
 
     name_hash->table = (char **) calloc(11131, sizeof(char *));
 
@@ -84,6 +84,7 @@ uint32_t getCityCode( tname_hash * hash, char * name ){
     while(hash->table[hashCode]){
 
         if (strcmp(hash->table[hashCode]->name, name) == 0){
+            printf("\nEntrou");
             options[actual_size] = hash->table[hashCode];
             actual_size = actual_size + 1;
         }
@@ -117,7 +118,7 @@ void DestroyNameHash( tname_hash * hash ){
         if(hash->table){
 
             for (uint16_t position = 0; position < hash->maxSize; position++)
-                if (hash->table[position])
+                if ((hash->table+position))
                     free((tcity*) (hash->table+position));
 
             free(hash->table);

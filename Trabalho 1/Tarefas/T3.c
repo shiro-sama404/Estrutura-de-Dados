@@ -2,7 +2,6 @@
 #include "..\Bibliotecas\Hash.h"
 #include "..\Bibliotecas\NameHash.h"
 #include "..\Bibliotecas\KD_Tree.h"
-#include "..\Bibliotecas\Trabalho.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,7 +16,6 @@ int main(){
     tname_hash * name_hash = (tname_hash *) malloc(sizeof(tname_hash));
     
     uint32_t ibge_code;
-    char name[35];
     short cities_amount;
 
     if(!InitializeKDTree(tree, hash) || !InitializeNameHash(name_hash, hash)){
@@ -35,12 +33,14 @@ int main(){
             
         if(op == 1){
 
-            memset(name, ' ', 34);
+            char name[35];
 
             printf("\nDigite o nome da cidade: ");
-            scanf("%s", name);
+            fgets(name, 34, stdin);
 
             ibge_code = getCityCode(name_hash, name);
+
+            printf("\n%d ", ibge_code);
 
             if(ibge_code > 0){
                 printf("\nDigite a quantidade de cidades: ");
