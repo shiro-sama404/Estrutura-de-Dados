@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "stdlib.h": "c",
+        "string.h": "c",
+        "stdio.h": "c",
+        "kdtree.h": "c",
+        "stdbool.h": "c",
+        "stdint.h": "c",
+        "trabalho.h": "c",
+        "hash.h": "c",
+        "city.h": "c",
+        "jason_parser.h": "c",
+        "type_traits": "c",
+        "avl_tree.h": "c",
+        "kd_tree.h": "c",
+        "abb_tree.h": "c",
+        "nha.h": "c"
+    }
+}
