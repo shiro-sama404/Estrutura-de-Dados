@@ -7,8 +7,6 @@
 #include "..\Bibliotecas\City.h"
 #include "..\Bibliotecas\Jason_Parser.h"
 
-#define SEED 0x12345678
-
 typedef struct{
     tcity ** table;
     uint16_t actualSize;
@@ -78,20 +76,16 @@ bool InsertInHash( thash * hash, tcity * city ){
     }
 
     //  Inserindo
-    //printf("\nCalculando o hashing de %d..\n", city->ibge_code);
 
     uint8_t attempt = 0;
     uint32_t hashCode = HashFunction(city->ibge_code, attempt++) % hash->maxSize;
 
-    //printf("\nInserindo cidade de bucket %d..\n", hashCode);
-
-    while(hash->table[hashCode] != NULL && hash->table[hashCode] != hash->deleted)
+    while(hash->table[hashCode] && hash->table[hashCode] != hash->deleted)
         hashCode = HashFunction(city->ibge_code, attempt++) % hash->maxSize;
 
     hash->table[hashCode] = city;
     hash->actualSize++;
     
-    //printf("\nCidade inserida com sucesso.\n");
     return true;
 }
 
@@ -146,7 +140,7 @@ uint16_t getCityIndex( thash * hash, uint32_t ibge_code ){
     uint8_t attempt = 0;
     uint16_t hashCode = HashFunction(ibge_code, attempt++) % hash->maxSize;
 
-    while(hash->table[hashCode] != NULL){
+    while(hash->table[hashCode]){
 
         if (hash->table[hashCode]->ibge_code == ibge_code)
             return hashCode;
@@ -164,7 +158,7 @@ tcity * getCity( thash * hash, uint32_t ibge_code ){
     uint8_t attempt = 0;
     uint16_t hashCode = HashFunction(ibge_code, attempt++) % hash->maxSize;
 
-    while(hash->table[hashCode] != NULL){
+    while(hash->table[hashCode]){
 
         printf("\nProcurando cidade de código %d..\n", hashCode);
         if (hash->table[hashCode]->ibge_code == ibge_code && hash->table[hashCode] != hash->deleted){

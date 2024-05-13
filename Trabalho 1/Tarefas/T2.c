@@ -1,8 +1,6 @@
 #include "..\Bibliotecas\City.h"
 #include "..\Bibliotecas\Hash.h"
-#include "..\Bibliotecas\AVL_Tree.h"
 #include "..\Bibliotecas\KD_Tree.h"
-#include "..\Bibliotecas\Trabalho.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -48,9 +46,7 @@ int main(){
             }
 
         }else if(op > 0){
-            //int qtd = contaNodes2(tree->root);
             printf("\nInsira uma opção válida");
-            //printf("\nNodes na árvore: %d", qtd);
         }
     }
 
