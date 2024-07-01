@@ -31,10 +31,9 @@ int main(){
             scanf("%d", &ibge_code);
 
             displayCityInfo(getCity(hash, ibge_code));
-        }else if(op == 2){
-
+        }else if(op == 2)
             testHash(hash);
-        }else
+        else if(op != 0)
             printf("\nInsira uma opção válida");
     }
 

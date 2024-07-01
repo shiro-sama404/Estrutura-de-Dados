@@ -10,26 +10,15 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef struct{
-    tcity ** table;
-    uint16_t actualSize;
-    uint16_t maxSize;
-    char * deleted;
-}tname_hash;
-
-/*
-
-    Funções básicas da Hash
-
-*/
+/*               Funções básicas da Hash para nomes                  */
 
 // Função hash
-uint16_t NameHashFunction( const char * key, uint8_t attempt) {
-   return (uint16_t)(*key + attempt * 61 - (*key % 37));
+uint16_t NameHashFunction( const char * key, uint16_t len, uint8_t attempt) {
+    return (uint16_t)(*(key + (attempt % len)) * 61 - ((*(key + ((7 * attempt) % len))) * attempt));
 }
 
 // Insere uma cidade na tabela hash
-void InsertInNameHash( tname_hash * name_hash, tcity * city ){
+void InsertInNameHash( thash * name_hash, tcity * city ){
 
     //  Validando a inserção
     if(name_hash->maxSize == (name_hash->actualSize++))
@@ -39,22 +28,21 @@ void InsertInNameHash( tname_hash * name_hash, tcity * city ){
     else{
         //  Inserindo
         uint8_t attempt = 0;
-        uint16_t hashCode = NameHashFunction(city->name, attempt++) % name_hash->maxSize;
-
+        uint16_t length = (uint16_t) strlen(city->name) - 1;
+        uint16_t hashCode = NameHashFunction(city->name, length, attempt++) % name_hash->maxSize;
+        
         while(name_hash->table[hashCode])
-            hashCode = NameHashFunction(city->name, attempt++) % name_hash->maxSize;
+        hashCode = NameHashFunction(city->name, length, attempt++) % name_hash->maxSize;
 
         name_hash->table[hashCode] = city;
         name_hash->actualSize++;
     }
 }
 
-// Inicializa a tabela name hash com os nomes obtidos da tabela hash geral
-bool InitializeNameHash( tname_hash * name_hash, thash * hash ){
+// Inicializa a tabela name_hash com os dados obtidos da tabela hash geral
+bool InitializeNameHash( thash * name_hash, thash * hash ){
 
     //  Inicialização padrão da hash
-    printf("\nInicializando a name hash..\n");
-
     name_hash->table = (tcity **) calloc(11131, sizeof(tcity *));
 
     if (name_hash->table == NULL)
@@ -63,7 +51,7 @@ bool InitializeNameHash( tname_hash * name_hash, thash * hash ){
     name_hash->actualSize = 0;
     name_hash->maxSize = 11131;
 
-    for(short i = 0; i < name_hash->maxSize; i++)
+    for(int i = 0; i < name_hash->maxSize; i++)
         if(hash->table[i])
             InsertInNameHash(name_hash, hash->table[i]);
 
@@ -71,64 +59,41 @@ bool InitializeNameHash( tname_hash * name_hash, thash * hash ){
 }
 
 // Retorna o código IBGE a partir do nome da cidade
-uint32_t getCityCode( tname_hash * hash, char * name ){
-    
-    printf("\nCalculando o hashing de %s..\n", name);
+uint32_t getCityCodeByName( thash * name_hash, char * name ){
+
+    // Buscando todas as cidades com o mesmo nome
+    tcity ** options = (tcity **) malloc(10 * sizeof(tcity *)); // Supondo que para cada nome haja no máximo 10 cidades
+    uint8_t options_amount = 0;
 
     uint8_t attempt = 0;
-    uint16_t hashCode = NameHashFunction(name, attempt++) % hash->maxSize;
+    uint16_t length = (uint16_t) strlen(name) - 1;
+    uint16_t hashCode = NameHashFunction(name, length, attempt++) % name_hash->maxSize;
 
-    tcity ** options = (tcity **) malloc(sizeof(tcity *));
-    uint8_t actual_size = 0;
+    while(name_hash->table[hashCode] || name_hash->table[hashCode] == name_hash->deleted){
 
-    while(hash->table[hashCode]){
-
-        if (strcmp(hash->table[hashCode]->name, name) == 0){
-            printf("\nEntrou");
-            options[actual_size] = hash->table[hashCode];
-            actual_size = actual_size + 1;
+        if (strcmp(name_hash->table[hashCode]->name, name) == 0){
+            options[options_amount] = name_hash->table[hashCode];
+            options_amount = options_amount + 1;
         }
-        hashCode = NameHashFunction(name, attempt++) % hash->maxSize;
+        hashCode = NameHashFunction(name, length, attempt++) % name_hash->maxSize;
     }
 
     short op = 0;
 
-    if(actual_size == 0){
+    if(options_amount == 0)
         return 0;
-    }
 
-    if(actual_size > 1){
-        printf("\nHá mais de uma cidade com esse nome. Escolha uma:\n");
-        for(short i = 0; i < actual_size; i++){
-            printf("Código IBGE: %d\n", options[i]->ibge_code);
-        }
+    if(options_amount > 1){
+
+        printf("\nHa mais de uma cidade com esse nome. Escolha uma:\n");
+
+        for(short i = 0; i < options_amount; i++)
+            printf("opcao %d: Codigo IBGE: %d\n", i + 1, options[i]->ibge_code);
+
         scanf("%hu", &op);
     }
 
-    return options[op]->ibge_code;
-}
-
-// Desaloca a tabela name hash
-void DestroyNameHash( tname_hash * hash ){
-
-    if(hash){
-
-        printf("\nApagando Tabela Name Hash..\n\n");
-
-        if(hash->table){
-
-            for (uint16_t position = 0; position < hash->maxSize; position++)
-                if ((hash->table+position))
-                    free((tcity*) (hash->table+position));
-
-            free(hash->table);
-            hash->table = NULL;
-        }
-
-        free(hash);
-        hash = NULL;
-        printf("\nTabela Name Hash Apagada.\n");
-    }
+    return options[op-1]->ibge_code;
 }
 
 #endif

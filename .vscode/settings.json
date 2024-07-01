@@ -15,6 +15,7 @@
         "kd_tree.h": "c",
         "abb_tree.h": "c",
         "nha.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "functional": "c"
     }
 }

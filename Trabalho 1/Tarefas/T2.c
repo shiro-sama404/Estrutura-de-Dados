@@ -22,11 +22,11 @@ int main(){
         return EXIT_FAILURE;
     }
 
-    short op = 1;
+    uint16_t op = 1;
 
     while(op){
 
-        printf("\n\n1: Pesquisar cidades mais próximas\n0: Sair\n\n");
+        printf("\n\n1: Pesquisar cidades mais proximas\n0: Sair\n\n");
         scanf("%hu", &op);
             
         if(op == 1){
@@ -34,20 +34,18 @@ int main(){
             printf("\nDigite a quantidade de cidades: ");
             scanf("%hu", &cities_amount);
 
-            if(cities_amount <= 0){
-                printf("\nInsira no mínimo uma cidade.\n");
-            }else if(cities_amount > 5569){
-                printf("\nNão há tantas cidades no Brasil! Insira um valor menor que 5570.\n");
-            }else{
-                printf("\nDigite o código ibge da cidade: ");
-                scanf("%d", &ibge_code);
-
-                displayCities(getNearestCities(tree, hash, ibge_code, cities_amount), cities_amount);
+            if(cities_amount > 5569){
+                printf("\nInsira um valor entre 1 e 5569.\n");
+                continue;
             }
 
-        }else if(op > 0){
-            printf("\nInsira uma opção válida");
-        }
+            printf("\nDigite o codigo ibge da cidade: ");
+            scanf("%d", &ibge_code);
+
+            displayCities(getNearestCities(tree, hash, ibge_code, cities_amount), cities_amount);
+            
+        }else if(op != 0)
+            printf("\nInsira uma opcao valida");
     }
 
     DestroyHash(hash);

@@ -8,7 +8,6 @@
 #include <math.h>
 
 //  Struct cidade
-
 typedef struct{
     uint32_t ibge_code;
     char * name;

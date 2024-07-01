@@ -1,5 +1,4 @@
 #include "..\Bibliotecas\City.h"
-#include "..\Bibliotecas\Hash.h"
 #include "..\Bibliotecas\NameHash.h"
 #include "..\Bibliotecas\KD_Tree.h"
 
@@ -9,14 +8,16 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define BiggestName 32 // Cidade com maior nome do Brasil: 32 caracteres (Vila Bela da Santíssima Trindade)
+
 int main(){
 
     kd_tree * tree = (kd_tree *) malloc(sizeof(kd_tree));
     thash * hash = (thash *) malloc(sizeof(thash));
-    tname_hash * name_hash = (tname_hash *) malloc(sizeof(tname_hash));
+    thash * name_hash = (thash *) malloc(sizeof(thash));
     
     uint32_t ibge_code;
-    short cities_amount;
+    uint16_t cities_amount;
 
     if(!InitializeKDTree(tree, hash) || !InitializeNameHash(name_hash, hash)){
 
@@ -24,21 +25,24 @@ int main(){
         return EXIT_FAILURE;
     }
 
-    short op = 1;
+    uint16_t op = 1;
 
     while(op){
 
-        printf("\n\n1: Pesquisar cidades mais próximas a partir do nome\n0: Sair\n\n");
+        printf("\n\n1: Pesquisar cidades mais proximas a partir do nome\n0: Sair\n\n");
         scanf("%hu", &op);
             
         if(op == 1){
 
-            char name[35];
+            char name[BiggestName + 1];
 
             printf("\nDigite o nome da cidade: ");
-            fgets(name, 34, stdin);
+            getchar();
+            fgets(name, BiggestName, stdin);
 
-            ibge_code = getCityCode(name_hash, name);
+            name[strlen(name)-1] = name[strlen(name)];
+
+            ibge_code = getCityCodeByName(name_hash, name);
 
             printf("\n%d ", ibge_code);
 
@@ -46,33 +50,28 @@ int main(){
                 printf("\nDigite a quantidade de cidades: ");
                 scanf("%hu", &cities_amount);
 
-                if(cities_amount <= 0){
-                    printf("\nInsira no mínimo uma cidade.\n");
-                }else if(cities_amount > 5569){
-                    printf("\nNão há tantas cidades no Brasil! Insira um valor menor que 5570.\n");
-                }else{
-                    printf("\nDigite o código ibge da cidade: ");
-                    scanf("%d", &ibge_code);
-
-                    tnear * nearest = getNearestCities(tree, hash, ibge_code, cities_amount);
-                
-                    for(short i = 0; i < cities_amount; i++){
-                        displayCityInfo(nearest[i].city);
-                        printf("\nDistancia: %f\n\n", nearest[i].distance);
-                    }
-                        
+                if(cities_amount > 5569){
+                    printf("\nInsira um valor entre 1 e 5569.\n");
+                    continue;
                 }
-            }else{
-                printf("\nCidade não encontrada.\n");
-            }
-        }else if(op > 0){
-            printf("\nInsira uma opção válida");
-        }
+
+                tnear * nearest = getNearestCities(tree, hash, ibge_code, cities_amount);
+            
+                for(short i = 0; i < cities_amount; i++){
+                    displayCityInfo(nearest[i].city);
+                    printf("distancia: %f\n\n", nearest[i].distance);
+                }
+                
+            }else
+                printf("\nCidade nao encontrada.\n");
+
+        }else if(op > 0)
+            printf("\nInsira uma opcao valida");
     }
 
     DestroyHash(hash);
+    DestroyHash(name_hash);
     DestroyKDTree(tree);
-    DestroyNameHash(name_hash);
 
     return EXIT_SUCCESS;
 }

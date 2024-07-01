@@ -62,8 +62,7 @@ bool InsertInHash( thash * hash, tcity * city ){
 
         if(hash->maxSize == (hash->actualSize++))
             printf("\nErro ao inserir cidade: Tabela cheia.\n");
-        else
-            printf("\nErro ao inserir cidade: Cidade indefinida.\n");
+            
         free(city);
         return false;
     }
