@@ -166,10 +166,8 @@ void Balance( tnode * node ){
 // Realiza a inserção de um novo registro
 tnode * Insert( tnode * father, tnode * node, tcity * city, short field ){
 
-    if(node == NULL){
-        tnode * new_node = newNode(father, city, field);
-        return new_node;
-    }
+    if(node == NULL)
+        return newNode(father, city, field);
 
     short comparison = compareByField(node->cities_register, city, field);
 
@@ -344,10 +342,8 @@ void Query( tquery * query, tnode * node, void * min, void * max, short field ){
 void destroyRoot( tnode * node ){
 
     if(node){
-
         destroyRoot(node->left);
         destroyRoot(node->right);
-
         free((tnode *) node);
     }
 }

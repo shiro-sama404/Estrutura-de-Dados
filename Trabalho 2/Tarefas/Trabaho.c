@@ -15,10 +15,8 @@ void destroyALL(thash * hash, tAVL (*AVL_trees)[5]){
     DestroyHash(hash);
 
     printf("\nApagando AVL..");
-    for(short i = 0; i < 5; i++){
-        destroyRoot(AVL_trees[i]->root);
-        free((tAVL *) AVL_trees[i]);
-    }
+    for(short i = 0; i < 5; i++)
+        destroyRoot((*AVL_trees[i]).root);
 }
 
 int main(){
@@ -91,10 +89,15 @@ int main(){
                         min_range[strlen(min_range)-1] = min_range[strlen(min_range)];
 
                         char max_range[BiggestName];
-                        printf("\nLimite inferior: ");
+                        printf("\nLimite superior: ");
                         getchar();
                         fgets(max_range, BiggestName, stdin);
                         max_range[strlen(max_range)-1] = max_range[strlen(max_range)];
+
+                        if(strcmp(min_range, max_range) >= 0){
+                            printf("\nO limite superior deve ser maior que o inferior");
+                            continue;
+                        }
 
                         Query(query_result, AVL_trees[avl_type].root, (void *)min_range, (void *)max_range, avl_type);
 
@@ -108,6 +111,11 @@ int main(){
                         scanf("%lf", pmin_range);
                         printf("\nLimite superior: ");
                         scanf("%lf", pmax_range);
+
+                        if(min_range > max_range){
+                            printf("\nO limite superior deve ser maior que o inferior");
+                            continue;
+                        }
 
                         Query(query_result, AVL_trees[avl_type].root, (void *)pmin_range, (void *)pmax_range, avl_type);
                     
@@ -125,9 +133,13 @@ int main(){
                         uint16_t min_range = (uint8_t)aux_max_range, max_range = (uint8_t)aux_max_range;
                         uint16_t * pmin_range = &min_range, * pmax_range = &max_range;
 
+                        if(min_range > max_range){
+                            printf("\nO limite superior deve ser maior que o inferior");
+                            continue;
+                        }
+
                         Query(query_result, AVL_trees[avl_type].root, (void *)pmin_range, (void *)pmax_range, avl_type);
                     }
-                    
                 }
             }
 
