@@ -130,8 +130,8 @@ int main(){
                         printf("\nLimite superior: ");
                         scanf("%d", &aux_max_range);
 
-                        uint16_t min_range = (uint8_t)aux_max_range, max_range = (uint8_t)aux_max_range;
-                        uint16_t * pmin_range = &min_range, * pmax_range = &max_range;
+                        uint8_t min_range = (uint8_t)aux_max_range, max_range = (uint8_t)aux_max_range;
+                        uint8_t * pmin_range = &min_range, * pmax_range = &max_range;
 
                         if(min_range > max_range){
                             printf("\nO limite superior deve ser maior que o inferior");

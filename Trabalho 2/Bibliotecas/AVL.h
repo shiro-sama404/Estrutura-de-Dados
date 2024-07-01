@@ -240,7 +240,6 @@ void addToQuery( tquery * query, tregister * reg){
             reg = reg->next;
         }
     }
-    // Verifica se há repetições
 }
 
 tnode * successor( tnode * node ){
@@ -300,7 +299,6 @@ void Query( tquery * query, tnode * node, void * min, void * max, short field ){
             addToQuery(query, successor_node->cities_register);
             successor_node = successor(successor_node);
         }
-
 
     // avls do tipo double 
     }else if(field < 3){
